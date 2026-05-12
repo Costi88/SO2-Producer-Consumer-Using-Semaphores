@@ -9,12 +9,12 @@
 #define SIZE 10
 //Numarul de produse create.
 #define ITEMS 20
-//Numarul de threaduri consumatori.
+//Numarul de threaduri consumer.
 #define NR_CONSUMERS 4
 //Numarul de threaduri producer.
 #define NR_PRODUCERS 2
 //Numarul total de threaduri.
-#define NR_THREADS NR_PRODUCERS + NR_CONSUMERS
+#define NR_THREADS (NR_PRODUCERS + NR_CONSUMERS)
 
 //Bufferul din memoria partajata.
 int buffer[SIZE];
@@ -29,7 +29,7 @@ sem_t sem;
 
 void* producer(void* arg) {
     while (1) {
-        //Asteptam pana cand o sa fie locuri disponibile.
+        //Asteptam sa se elibereze locuri.
         sem_wait(&empty);
         //Intram in sectiunea critica.
         sem_wait(&sem);
@@ -38,7 +38,7 @@ void* producer(void* arg) {
         if(produced >= ITEMS) {
             //Iesim din sectiunea critica.
             sem_post(&sem);
-            //Incrementam valoarea semaforului si deblocheaza procesele 
+            //Incrementam valoarea semaforului si deblocam procesele 
             //care asteptau daca este cazul.
             sem_post(&full);
             break;
@@ -55,7 +55,7 @@ void* producer(void* arg) {
 
         //Iesim din sectiunea critica.
         sem_post(&sem);
-        //Incrementam valoarea semaforului si deblocheaza procesele 
+        //Incrementam valoarea semaforului si deblocam procesele 
         //care asteptau daca este cazul.
         sem_post(&full);
     }
@@ -74,7 +74,7 @@ void* consumer(void* arg) {
         if (consumed >= ITEMS) {
             //Iesim din sectiunea critica.
             sem_post(&sem);
-            //Incrementam valoarea semaforului si deblocheaza procesele 
+            //Incrementam valoarea semaforului si deblocam procesele 
             //care asteptau daca este cazul.
             sem_post(&full);
             break;
@@ -90,7 +90,7 @@ void* consumer(void* arg) {
 
         //Iesim din sectiunea critica.
         sem_post(&sem);
-        //Incrementam valoarea semaforului si deblocheaza procesele 
+        //Incrementam valoarea semaforului si deblocam procesele 
         //care asteptau daca este cazul.
         sem_post(&empty);
     }
@@ -109,7 +109,7 @@ void stop_exec(char msg[]) {
 
 /**
  * Creaza NR_PRODUCERS threaduri de tip producer si NR_CONSUMERS threaduri de tip consumer.
- * Daca un thread nu o sa poata fi creat programul va afisa un mesaj de eroare si isi va opri executia.
+ * Daca un thread nu o sa poata fi creat se va afisa un mesaj de eroare si executia se va opri.
  * @param threads Threadurile care vor fi create.
  */
 void create_threads(pthread_t threads[]) {
@@ -125,9 +125,9 @@ void create_threads(pthread_t threads[]) {
 /**
  * Sincronizeaza threadurile astfel incat programul sa nu-si continue 
  * executia pana cand threadurile isi termina executia.
- * Daca nu pot fi sincronizate toate threadurile atunci programul 
- * va afisa un mesaj de eroare si isi va opri executia.
- * @param threads Threadurile sincronizate.
+ * Daca nu pot fi sincronizate toate threadurile atunci se 
+ * va afisa un mesaj de eroare si executia se va opri.
+ * @param threads Threadurile care vor fi sincronizate.
  */
 void sync_threads(pthread_t threads[]) {
     for (int i = 0; i < NR_THREADS; i++)
