@@ -58,8 +58,6 @@ void* producer(void* arg) {
         //Incrementam valoarea semaforului si deblocheaza procesele 
         //care asteptau daca este cazul.
         sem_post(&full);
-        
-        sleep(1);
     }
 
     return NULL;
@@ -95,8 +93,6 @@ void* consumer(void* arg) {
         //Incrementam valoarea semaforului si deblocheaza procesele 
         //care asteptau daca este cazul.
         sem_post(&empty);
-
-        sleep(2);
     }
 
     return NULL;
