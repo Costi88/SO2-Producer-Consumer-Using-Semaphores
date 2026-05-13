@@ -85,7 +85,7 @@ void* consumer(void* arg) {
         //Afisam produsul consumam.
         printf("Consumer %lu | Buffer index: %d | Item: %d\n", (unsigned long) pthread_self(), index, buffer[index]);
 
-        //Incrementam numarul de produse create.
+        //Incrementam numarul de produse consumate.
         consumed++;
 
         //Iesim din sectiunea critica.
